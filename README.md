@@ -1,2 +1,2 @@
 # StudyNotion
-An Ed-Tech Platform
+An Ed-Tech Platform ye
