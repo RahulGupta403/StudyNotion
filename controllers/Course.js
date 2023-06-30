@@ -32,10 +32,13 @@ exports.createCourse = async (req, res)=>{
             })
         }
 
+        // Instructor id and user_id are same
+
         //check given details 
         const tagDetails = await Tag.findById(tag);
         if(!tagDetails)
         {
+    
             return res.status(404).json({
                 success: false,
                 message: "Tag details not found"
