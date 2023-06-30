@@ -10,7 +10,7 @@ require("dotenv").config;
 exports.sendOTP = async (req, res)=>{
     try{
                 //fetching emal from body
-            const {email} = req.body;
+            const { email } = req.body;
 
             //check if user already exists
             const checkUserPresent = await User.findOne({email});
@@ -206,7 +206,7 @@ exports.login = async (req, res)=>{
             const payload ={
                 email: user.email,
                 id: user._id,
-                role: user.role
+                accountType: user.accountType
             }
 
             const token = jwt.sign(payload, process.env.JWT_SECRET, {
@@ -245,4 +245,15 @@ exports.login = async (req, res)=>{
             message: "Login Failure, please try again"
         })
     }
+};
+
+
+exports.changePassword = async (req, res)=>{
+    //get data from req body
+    //get oldPassword, newPassword, ConfirmPassword
+    //Validation
+
+    //update in DB
+    //send mail- Password has been Changed
+    //return response
 };
