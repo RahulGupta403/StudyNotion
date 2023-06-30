@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const mailSender = require('../utils/mailSender');
+const bcrypt = require("bcrypt");
 
 //resetPasswordToken
 exports.resetPasswordToken = async  (req, res)=>{
@@ -46,3 +47,62 @@ exports.resetPasswordToken = async  (req, res)=>{
         })
     }
 };
+
+
+//reset Password
+exports.resetPassword = async (req, res)=>{
+    try{
+            //data fetch 
+        const { password, confirmPassword, token } = req.body;
+
+        //Validation
+        if(password !== confirmPassword){
+            return res.json({
+                success: false,
+                message: "Password Not Matched"
+            });
+        }
+
+        //get Userdetails
+        const Userdetails = await User.findOne({ token: token});
+
+        //if no entry- invalid Token
+        if(!userDetails){
+            return res.json({
+                success: false,
+                message: "Token is invalid"
+            });
+        }
+
+        //expired token
+        if(userDetails.resetPasswordExpires < Date.now()){
+            return res.json({
+                success: false,
+                message: "Token Expired, Please regenerate token"
+            })
+        }
+
+        //hashpassword
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        //update password
+        await User.findAndUpdate(
+            {token: token},
+            {password: hashedPassword},
+            {new: true}
+        )
+
+        return res.status({
+            success: true,
+            message: " Password reset Successfull"
+        });
+    }
+    catch(error)
+    {
+        response.log(error);
+        res.status(500).json({
+            success: falses,
+            message: "Something went wrong while reseting password"
+        })
+    }
+}
