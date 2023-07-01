@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const SubSectionSchema = new mongoose.Schema({
     title: {
-        type: String,
+        type: String
     },
     timeDuration: {
         type: String
